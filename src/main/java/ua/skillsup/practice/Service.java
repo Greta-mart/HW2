@@ -64,7 +64,7 @@ public class Service implements ExampleService {
             for (ExampleEntity entity:temp) {
                 sum = entity.getPrice().add(sum);
             }
-            result.put(date, sum.divide(new BigDecimal(temp.size())));
+            result.put(date, sum.divide(new BigDecimal(temp.size()), RoundingMode.HALF_UP));
         }
         return result;
     }
