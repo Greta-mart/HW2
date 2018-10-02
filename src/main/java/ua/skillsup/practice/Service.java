@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoField;
 import java.util.*;
 
@@ -30,7 +32,7 @@ public class Service implements ExampleService {
 
         if (price == null)
             return;
-        if (price.compareTo(limit) == -1)
+        if (price.compareTo(limit) < 0)
             return;
         ExampleEntity exampleEntity = new ExampleEntity();
         exampleEntity.setTitle(title);
@@ -49,7 +51,8 @@ public class Service implements ExampleService {
         Map<LocalDate, ArrayList<ExampleEntity>> map = new HashMap<>();
         for (ExampleEntity entity:exampleDao.findAll()) {
             Instant instant = entity.getDateIn();
-            LocalDate date = LocalDate.of(instant.get(ChronoField.YEAR), instant.get(ChronoField.MONTH_OF_YEAR), instant.get(ChronoField.DAY_OF_MONTH));
+            //LocalDate date = LocalDate.of(instant.get(ChronoField.YEAR), instant.get(ChronoField.MONTH_OF_YEAR), instant.get(ChronoField.DAY_OF_MONTH));
+            LocalDate date = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault()).toLocalDate();
             if (map.containsKey(date))
                 map.get(date).add(entity);
             else {
