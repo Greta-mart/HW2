@@ -12,6 +12,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.*;
 import java.util.*;
 
@@ -19,14 +20,25 @@ public class ServiceTest {
     @Mock
     private ExampleDao exampleDao;
 
-
-
     private Service service;
 
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
         service = new Service(exampleDao);
+    }
+
+    @DisplayName("Happy path")
+    @org.junit.Test
+    public void testAddNewItem_correct() {
+
+        service.addNewItem("Title", new BigDecimal(30.033));
+
+        ExampleEntity ee = new ExampleEntity();
+        ee.setPrice(new BigDecimal(30.033).setScale(2, RoundingMode.HALF_UP));
+        ee.setTitle("Title");
+
+        verify(exampleDao, Mockito.times(1)).store(Mockito.eq(ee));
     }
 
     @DisplayName("Fail on null title and price")
@@ -105,20 +117,7 @@ public class ServiceTest {
         assertTrue(actual.isEmpty());
     }
 
-   /* @org.junit.Test
-    public void testAddNewItem_correct() {
-        final String title = "Title";
-        final BigDecimal price = new BigDecimal(30);
-        service.addNewItem("Title", new BigDecimal(30));
-
-        ExampleEntity ee = new ExampleEntity();
-        ee.setPrice(new BigDecimal(30));
-        ee.setTitle("Title");
-
-        verify(exampleDao, Mockito.times(1)).store(Mockito.eq(ee));
-    }*/
-
-
+    @DisplayName("Happy path")
     @org.junit.Test
     public void test_getStatistic() {
         final LocalDate localDate08032018 = LocalDate.of(2018, Month.MARCH, 8);
