@@ -42,45 +42,45 @@ public class ServiceTest {
     }
 
     @DisplayName("Fail on null title and price")
-    @org.junit.Test
+    @org.junit.Test(expected = IllegalArgumentException.class)
     public void test1_addNewItem() {
         service.addNewItem(null, null);
-        verify(exampleDao, Mockito.times(0)).store(Mockito.any(ExampleEntity.class));
+       // verify(exampleDao, Mockito.times(0)).store(Mockito.any(ExampleEntity.class));
     }
 
-    @DisplayName("Fail on nullTitle")
-    @org.junit.Test
+    @DisplayName("Fail on null title")
+    @org.junit.Test(expected = IllegalArgumentException.class)
     public void test2_addNewItem() {
         service.addNewItem(null, new BigDecimal(40.00));
-        verify(exampleDao, Mockito.times(0)).store(Mockito.any(ExampleEntity.class));
+        //verify(exampleDao, Mockito.times(0)).store(Mockito.any(ExampleEntity.class));
     }
 
     @DisplayName("Fail on null price")
-    @org.junit.Test
+    @org.junit.Test(expected = IllegalArgumentException.class)
     public void test3_addNewItem() {
         service.addNewItem("Str", null);
-        verify(exampleDao, Mockito.times(0)).store(Mockito.any(ExampleEntity.class));
+        //verify(exampleDao, Mockito.times(0)).store(Mockito.any(ExampleEntity.class));
     }
 
     @DisplayName("Fail on title less three symbols")
-    @org.junit.Test
+    @org.junit.Test(expected = IllegalArgumentException.class)
     public void test4_addNewItem() {
         service.addNewItem("St", null);
-        verify(exampleDao, Mockito.times(0)).store(Mockito.any(ExampleEntity.class));
+        //verify(exampleDao, Mockito.times(0)).store(Mockito.any(ExampleEntity.class));
     }
 
     @DisplayName("Fail on title more 20 symbols")
-    @org.junit.Test
+    @org.junit.Test(expected = IllegalArgumentException.class)
     public void test5_addNewItem() {
         service.addNewItem("Titletitletitletitletitle", null);
-        verify(exampleDao, Mockito.times(0)).store(Mockito.any(ExampleEntity.class));
+        //verify(exampleDao, Mockito.times(0)).store(Mockito.any(ExampleEntity.class));
     }
 
     @DisplayName("Fail on price less than limit")
-    @org.junit.Test
+    @org.junit.Test(expected = IllegalArgumentException.class)
     public void test6_addNewItem() {
         service.addNewItem("Title", new BigDecimal(4.00));
-        verify(exampleDao, Mockito.times(0)).store(Mockito.any(ExampleEntity.class));
+        //verify(exampleDao, Mockito.times(0)).store(Mockito.any(ExampleEntity.class));
     }
 
     @DisplayName("Fail on anunique title")
