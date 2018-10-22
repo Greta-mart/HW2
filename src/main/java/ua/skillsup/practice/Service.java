@@ -22,17 +22,21 @@ public class Service implements ExampleService {
     public void addNewItem(String title, BigDecimal price) {
         if (title == null || title.isEmpty())
             throw new IllegalArgumentException("Title is null");
+
         for (ExampleEntity list: exampleDao.findAll()) {
             if(list.getTitle().equals(title))
-                return;
+                throw new IllegalArgumentException("Title is not unique");
         }
+
         if (title.length() < 3 || title.length() > 20)
             throw new IllegalArgumentException("Title is not in the range 3-20");
 
         if (price == null)
             throw new IllegalArgumentException("Price is null");
+
         if (price.compareTo(limit) < 0)
             throw new IllegalArgumentException("Price is lowest than limit");
+
         ExampleEntity exampleEntity = new ExampleEntity();
         exampleEntity.setTitle(title);
         exampleEntity.setPrice(price.setScale(2, RoundingMode.HALF_UP));
@@ -58,6 +62,7 @@ public class Service implements ExampleService {
                 map.get(date).add(entity);
             }
         }
+
         Map<LocalDate, BigDecimal> result = new HashMap<>();
         for (LocalDate date:map.keySet()) {
             BigDecimal sum = new BigDecimal(0.00);
@@ -67,6 +72,7 @@ public class Service implements ExampleService {
             }
             result.put(date, sum.divide(new BigDecimal(temp.size()), RoundingMode.HALF_UP));
         }
+
         return result;
     }
 }

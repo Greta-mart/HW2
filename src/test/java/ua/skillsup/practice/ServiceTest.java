@@ -1,6 +1,7 @@
 package ua.skillsup.practice;
 
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -45,46 +46,40 @@ public class ServiceTest {
     @org.junit.Test(expected = IllegalArgumentException.class)
     public void test1_addNewItem() {
         service.addNewItem(null, null);
-       // verify(exampleDao, Mockito.times(0)).store(Mockito.any(ExampleEntity.class));
     }
 
     @DisplayName("Fail on null title")
     @org.junit.Test(expected = IllegalArgumentException.class)
     public void test2_addNewItem() {
         service.addNewItem(null, new BigDecimal(40.00));
-        //verify(exampleDao, Mockito.times(0)).store(Mockito.any(ExampleEntity.class));
     }
 
     @DisplayName("Fail on null price")
     @org.junit.Test(expected = IllegalArgumentException.class)
     public void test3_addNewItem() {
         service.addNewItem("Str", null);
-        //verify(exampleDao, Mockito.times(0)).store(Mockito.any(ExampleEntity.class));
     }
 
     @DisplayName("Fail on title less three symbols")
     @org.junit.Test(expected = IllegalArgumentException.class)
     public void test4_addNewItem() {
         service.addNewItem("St", null);
-        //verify(exampleDao, Mockito.times(0)).store(Mockito.any(ExampleEntity.class));
     }
 
     @DisplayName("Fail on title more 20 symbols")
     @org.junit.Test(expected = IllegalArgumentException.class)
     public void test5_addNewItem() {
         service.addNewItem("Titletitletitletitletitle", null);
-        //verify(exampleDao, Mockito.times(0)).store(Mockito.any(ExampleEntity.class));
     }
 
     @DisplayName("Fail on price less than limit")
     @org.junit.Test(expected = IllegalArgumentException.class)
     public void test6_addNewItem() {
         service.addNewItem("Title", new BigDecimal(4.00));
-        //verify(exampleDao, Mockito.times(0)).store(Mockito.any(ExampleEntity.class));
     }
 
     @DisplayName("Fail on anunique title")
-    @org.junit.Test
+    @org.junit.Test(expected = IllegalArgumentException.class)
     public void test7_getStatistic() {
         BigDecimal price = BigDecimal.valueOf(3000);
         List<ExampleEntity> existent = new ArrayList<>();
@@ -103,8 +98,6 @@ public class ServiceTest {
         service.addNewItem("title1", price);
         service.addNewItem("title2", price);
         service.addNewItem("title3", price);
-
-        Mockito.verify(exampleDao, Mockito.times(0)).store(Mockito.any(ExampleEntity.class));
     }
 
     @DisplayName("Fail on empty list")
@@ -156,5 +149,27 @@ public class ServiceTest {
 
         assertTrue(actual.containsKey(localDate18032018));
         assertTrue(actual.get(localDate18032018).compareTo(price3) == 0);
+    }
+
+    @DisplayName("Unhappy path")
+    @org.junit.Test(expected = ExampleNetworkException.class)
+    public void testAddNewItem_ExampleNetworkException() {
+        when(exampleDao.store(any(ExampleEntity.class))).thenThrow(ExampleNetworkException.class);
+
+        service.addNewItem("Title", new BigDecimal(30.033));
+    }
+
+    @org.junit.Test(expected = ExampleNetworkException.class)
+    public void test9() {
+        Mockito.when(exampleDao.findAll()).thenThrow(ExampleNetworkException.class);
+
+        service.getStatistic();
+    }
+
+    @org.junit.Test(expected = ExampleNetworkException.class)
+    public void test10() {
+        when(exampleDao.findAll()).thenThrow(ExampleNetworkException.class);
+
+        service.addNewItem("Title", new BigDecimal(30.033));
     }
 }
